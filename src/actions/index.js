@@ -25,6 +25,12 @@ const totalCommand = (curCode) => {
   };
 }
 
+const wrongCommand = () => {
+  return {
+    type: "WRONG_COMMAND"
+  }
+}
+
 const rateDataRequested = () => {
   return {
     type: "FETCH_RATE_DATA_REQUESTED",
@@ -64,4 +70,11 @@ const fetchRate = ( service) => {
   };
 };
 
-export { addCommand, listCommand, clearCommand, totalCommand, fetchRate };
+export {
+  addCommand,
+  listCommand,
+  clearCommand,
+  totalCommand,
+  fetchRate,
+  wrongCommand,
+};

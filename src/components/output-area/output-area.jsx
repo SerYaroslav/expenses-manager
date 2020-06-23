@@ -1,43 +1,33 @@
 import React from 'react';
 import { connect } from "react-redux";
 
-const OutputArea = ({ expensesData, lastCommand, totalValue }) => {
-  if (expensesData.length === 0) {
-    return `Enter any command`;
+import {
+  ForAddListCommand,
+  ForTotalCommand,
+  ForWrongCommand,
+} from "../outputs";
+
+const OutputArea = ({ lastCommand, isWrongCommand, expensesData }) => {
+  if (isWrongCommand || expensesData.length === 0) {
+    return <ForWrongCommand />;
   }
 
   if (lastCommand === "total") {
-    return (
-      <div>
-        {totalValue.value} {totalValue.currency}
-      </div>
-    );
+    return <ForTotalCommand />;
   }
 
-  return (
-    <div>
-      <ul>
-        {expensesData.map((item, idx) => {
-          let expense = "";
-          for (let i = 0; i < item.expenseBody.length; i++) {
-            expense += `${item.expenseBody[i].join(" ")} `;
-          }
-          return (
-            <li key={idx}>
-              {item.date} {expense}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+  return <ForAddListCommand />;
 };
 
-const mapStateToProps = ({ expensesData, lastCommand, totalValue }) => {
+const mapStateToProps = ({
+  expensesData,
+  lastCommand,
+  isWrongCommand,
+}) => {
   return {
     expensesData,
     lastCommand,
-    totalValue,
+    isWrongCommand,
   };
 };
 

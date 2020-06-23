@@ -9,13 +9,14 @@ import { ServiceProvider } from "./components/service-context";
 
 import App from './components/app';
 
+
 const fixerService = new FixerService()
 
 ReactDOM.render(
   <Provider store={store}>
-    <ServiceProvider value={fixerService}>
-      <App />
-    </ServiceProvider>
+      <ServiceProvider value={fixerService}>
+        <App />
+      </ServiceProvider>
   </Provider>,
   document.getElementById("root")
 );

@@ -1,5 +1,8 @@
 const initialState = {
   lastCommand: null,
+  isWrongCommand: false,
+  loading: false,
+  error: false,
   expensesData: [],
   valCode: null,
   currencyValues: {},
@@ -15,15 +18,11 @@ const reducer = (state = initialState, action) => {
     case "ADD_COMMAND":
 
       //formate for "add" command : "add yyyy-mm-dd value carrencyCode productName"
-      console.log(state);
-      console.log("add", action.payload);
+
       const addDate = action.payload[1];
       const addValue = action.payload[2];
       const addCurrency = action.payload[3].toUpperCase();
       const addProductName = action.payload.slice(4).join(" ");
-      console.log({ addDate, addValue, addCurrency, addProductName });
-      console.log(state.expensesData);
-      console.log(state.currencyValues);
       const idx = state.expensesData.findIndex((item) => item.date === addDate);
 
       const newExpense = [addProductName, addValue, addCurrency];
@@ -35,12 +34,11 @@ const reducer = (state = initialState, action) => {
         currencyValues[addCurrency] += +addValue;
       }
 
-       
-
       if (idx === -1) {
         return {
           ...state,
-          lastCommand: 'add',
+          lastCommand: "add",
+          isWrongCommand: false,
           currencyValues: currencyValues,
           expensesData: [
             ...state.expensesData,
@@ -60,6 +58,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         lastCommand: "add",
+        isWrongCommand: false,
         currencyValues: currencyValues,
         expensesData: [
           ...state.expensesData.slice(0, idx),
@@ -70,7 +69,6 @@ const reducer = (state = initialState, action) => {
 
     case "LIST_COMMAND":
 
-      console.log("list");
       const sortedExpenses = [...state.expensesData].sort((a, b) => {
         if (a.date < b.date) {
           return -1;
@@ -83,12 +81,13 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
+        isWrongCommand: false,
         lastCommand: "list",
         expensesData: [...sortedExpenses],
       };
 
     case "CLEAR_COMMAND":
-      console.log("clear", action.payload);
+
       const clearedDate = action.payload;
       const clearIdx = state.expensesData.findIndex(
         (item) => item.date === clearedDate
@@ -97,6 +96,7 @@ const reducer = (state = initialState, action) => {
       const currentCurVal = state.currencyValues;
 
       let subtractedValue = {}
+      
       for (let i = 0; i < toSubtract.length; i++) {
         if(!subtractedValue.hasOwnProperty(toSubtract[i][2])){
           subtractedValue[toSubtract[i][2]] = +toSubtract[i][1];
@@ -105,22 +105,21 @@ const reducer = (state = initialState, action) => {
         }
       }
 
-      const objKeys = Object.keys(subtractedValue);
+       for (const key in subtractedValue) {
 
-      for (let i = 0; i < objKeys.length; i++) {
-        if (
-          currentCurVal.hasOwnProperty(objKeys[i]) &&
-          subtractedValue.hasOwnProperty(objKeys[i])
-        ) {
-          currentCurVal[objKeys[i]] -= subtractedValue[objKeys[i]];
-        }
-      }
-      
-      console.log({ subtractedValue, currentCurVal });
+         if (
+           currentCurVal.hasOwnProperty(key) &&
+           subtractedValue.hasOwnProperty(key)
+         ) {
+             currentCurVal[key] -= subtractedValue[key];
+           }
+
+       }
 
       return {
         ...state,
         lastCommand: "clear",
+        isWrongCommand: false,
         currencyValues: currentCurVal,
         expensesData: [
           ...state.expensesData.slice(0, clearIdx),
@@ -129,6 +128,7 @@ const reducer = (state = initialState, action) => {
       };
 
     case "TOTAL_COMMAND":
+
       const curNeeded = action.payload; 
       const curCurrent = state.currencyValues;
 
@@ -153,20 +153,42 @@ const reducer = (state = initialState, action) => {
           }
 
         }
-      
-      console.log({ resValue, otherRate });
+
       return {
         ...state,
         lastCommand: "total",
+        isWrongCommand: false,
         totalValue: {
           value: resValue.toFixed(2),
           currency: curNeeded,
         },
       };
 
+    case "WRONG_COMMAND":
+
+      return {
+        ...state,
+        isWrongCommand: true,
+      }
+
+    case "FETCH_RATE_DATA_REQUESTED":
+
+      return{
+        ...state,
+        loading: true,
+      }
+
+    case "FETCH_RATE_DATA_FAILURE":
+
+      return{
+        ...state,
+        error: action.payload
+      }
+
     case "FETCH_RATE_DATA_SUCCESS":
-      console.log("total", action.payload);
+
       const resRates = action.payload.rates;
+
       return {
         ...state,
         rates: resRates,
