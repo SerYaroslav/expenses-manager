@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b30400735a701ac68eb1c3a965007086",
+    "revision": "94b41482a91dd1914850c83e63e92fcd",
     "url": "/expenses-manager/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/expenses-manager/static/js/2.eeb44283.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "8b64ddd37584eb864b55",
-    "url": "/expenses-manager/static/js/main.407bdd0c.chunk.js"
+    "revision": "fe40082bb4a523700580",
+    "url": "/expenses-manager/static/js/main.d349df25.chunk.js"
   },
   {
     "revision": "32809a24deaa760c4834",
