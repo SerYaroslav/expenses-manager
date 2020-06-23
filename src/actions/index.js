@@ -18,11 +18,50 @@ const clearCommand = (date) => {
   }
 }
 
-const totalCommand = (currencyCode) => {
+const totalCommand = (curCode) => {
   return {
     type: "TOTAL_COMMAND",
-    payload: currencyCode,
+    payload: curCode,
   };
 }
 
-export { addCommand, listCommand, clearCommand, totalCommand };
+const rateDataRequested = () => {
+  return {
+    type: "FETCH_RATE_DATA_REQUESTED",
+  };
+};
+
+const rateDataLoaded = (newRateData) => {
+  return {
+    type: "FETCH_RATE_DATA_SUCCESS",
+    payload: newRateData,
+  };
+};
+
+const rateDataError = (error) => {
+  return {
+    type: "FETCH_RATE_DATA_FAILURE",
+    payload: error,
+  };
+};
+
+const fetchRate = ( service) => {
+  return (dispatch) => {
+    dispatch(rateDataRequested());
+    service
+      .getRates()
+      .then((res) => {
+        if (res.error) {
+          throw res.error;
+        }
+
+        dispatch(rateDataLoaded(res));
+        return res;
+      })
+      .catch((error) => {
+        dispatch(rateDataError(error));
+      });
+  };
+};
+
+export { addCommand, listCommand, clearCommand, totalCommand, fetchRate };

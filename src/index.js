@@ -9,7 +9,7 @@ import { ServiceProvider } from "./components/service-context";
 
 import App from './components/app';
 
-const fixerService = new FixerService
+const fixerService = new FixerService()
 
 ReactDOM.render(
   <Provider store={store}>

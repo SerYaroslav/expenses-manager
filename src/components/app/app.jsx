@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CommandField from '../command-fild';
+import CommandField from '../command-field';
 import OutputArea from "../output-area";
 
 const App = () => {
