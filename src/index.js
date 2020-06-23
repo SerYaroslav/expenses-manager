@@ -9,14 +9,17 @@ import { ServiceProvider } from "./components/service-context";
 
 import App from './components/app';
 
+import ErrorBoundry from './components/error-boundry';
 
 const fixerService = new FixerService()
 
 ReactDOM.render(
   <Provider store={store}>
+    <ErrorBoundry>
       <ServiceProvider value={fixerService}>
         <App />
       </ServiceProvider>
+    </ErrorBoundry>
   </Provider>,
   document.getElementById("root")
 );
